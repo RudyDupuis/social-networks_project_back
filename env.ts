@@ -15,18 +15,18 @@
 import Env from '@ioc:Adonis/Core/Env'
 
 export default Env.rules({
-  HOST: Env.schema.string({ format: 'host' }),
-  PORT: Env.schema.number(),
-  APP_KEY: Env.schema.string(),
-  APP_NAME: Env.schema.string(),
-  DRIVE_DISK: Env.schema.enum(['local']),
-  NODE_ENV: Env.schema.enum(['development', 'production', 'test']),
+	HOST: Env.schema.string({ format: 'host' }),
+	PORT: Env.schema.number(),
+	APP_KEY: Env.schema.string(),
+	APP_NAME: Env.schema.string(),
+  DRIVE_DISK: Env.schema.enum(['local'] as const),
+	NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
   DB_CONNECTION: Env.schema.enum(['pg']),
-  DB_HOST: Env.schema.string(),
-  DB_PORT: Env.schema.number(),
-  DB_USER: Env.schema.string(),
-  DB_PASSWORD: Env.schema.string(),
-  DB_DATABASE: Env.schema.string(),
+  PG_HOST: Env.schema.string(),
+  PG_PORT: Env.schema.number(),
+  PG_USER: Env.schema.string(),
+  PG_PASSWORD: Env.schema.string(),
+  PG_DATABASE: Env.schema.string(),
 })
 
 
