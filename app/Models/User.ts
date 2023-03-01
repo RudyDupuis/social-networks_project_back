@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import Post from './Post'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -35,6 +36,12 @@ export default class User extends BaseModel {
     pivotRelatedForeignKey: 'subscribed_to',
   })
   public subscribed_to: ManyToMany<typeof User>
+
+  @hasMany(() => Post, {
+    localKey: 'id',
+    foreignKey: 'author'
+  })
+  public posts: HasMany<typeof Post>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
