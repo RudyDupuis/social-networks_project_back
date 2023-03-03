@@ -2,5 +2,6 @@
 
 import UserFactory from "./UserFactory"
 import PostFactory from "./PostFactory"
+import CommentFactory from "./CommentFactory"
 
-export { UserFactory, PostFactory }
+export { UserFactory, PostFactory, CommentFactory }

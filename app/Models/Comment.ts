@@ -1,22 +1,15 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
-import Comment from './Comment'
-import Like from './Like'
+import Post from './Post'
 import Report from './Report'
 
-export default class Post extends BaseModel {
+export default class Comment extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public title: string
-
-  @column()
   public message: string
-
-  @column()
-  public tags: string
 
   // Here is the foreign key towards User
   @column()
@@ -24,16 +17,17 @@ export default class Post extends BaseModel {
 
   // Here is the relationship to the User entity. The foreign key parameter needs to point on the author one to work properly
   @belongsTo(() => User, {
-    localKey: 'id',
     foreignKey: 'author'
   })
   public user: BelongsTo<typeof User>
 
-  @hasMany(() => Comment)
-  public comments: HasMany<typeof Comment>
-
-  @hasMany(() => Like)
-  public likes: HasMany<typeof Like>
+  // Here is the foreign key towards Post
+  @column()
+  postId: number
+  
+  // Here is the relationship to the Post entity. No need to add the foreign key paramater. The default one will be postId
+  @belongsTo(() => Post)
+  public post: BelongsTo<typeof Post>
 
   @hasMany(() => Report)
   public reports: HasMany<typeof Report>

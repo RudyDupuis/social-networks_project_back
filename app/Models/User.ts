@@ -1,6 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, HasMany, hasMany, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Post from './Post'
+import Comment from './Comment'
+import Like from './Like'
+import Report from './Report'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -42,6 +45,28 @@ export default class User extends BaseModel {
     foreignKey: 'author'
   })
   public posts: HasMany<typeof Post>
+
+  @hasMany(() => Comment, {
+    localKey: 'id',
+    foreignKey: 'author'
+  })
+  public comments: HasMany<typeof Comment>
+
+  @hasMany(() => Like)
+  public likes: HasMany<typeof Like>
+
+  // Relationship to get the reports this user.
+  @hasMany(() => Report, {
+    localKey: 'id',
+  })
+  public reports: HasMany<typeof Report>
+
+  // Relationship to get the reports this user did to other Users
+  @hasMany(() => Report, {
+    localKey: 'id',
+    foreignKey: 'reporter'
+  })
+  public reported: HasMany<typeof Report>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
