@@ -1,29 +1,28 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, BelongsTo, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
-import Post from './Post'
-import User from './User'
+import { BaseModel, belongsTo, BelongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import Comment from './Comment'
-import Notification from './Notification'
+import Like from './Like'
+import User from './User'
 
-export default class Like extends BaseModel {
+export default class Notification extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
   // Here is the foreign key towards User
   @column()
-  userId: number
-  
+  public userId: number
+
   // Here is the relationship to the User entity. No need to add the foreign key paramater. The default one will be userId
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 
-  // Here is the foreign key towards Post
+  // Here is the foreign key towards Like
   @column()
-  postId: number
+  likeId: number
   
-  // Here is the relationship to the Post entity. No need to add the foreign key paramater. The default one will be postId
-  @belongsTo(() => Post)
-  public post: BelongsTo<typeof Post>
+  // Here is the relationship to the Like entity. No need to add the foreign key paramater. The default one will be likeId
+  @belongsTo(() => Like)
+  public like: BelongsTo<typeof Like>
 
   // Here is the foreign key towards Comment
   @column()
@@ -32,9 +31,6 @@ export default class Like extends BaseModel {
   // Here is the relationship to the Comment entity. No need to add the foreign key paramater. The default one will be commentId
   @belongsTo(() => Comment)
   public comment: BelongsTo<typeof Comment>
-
-  @hasMany(() => Notification)
-  public notifications: HasMany<typeof Notification>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

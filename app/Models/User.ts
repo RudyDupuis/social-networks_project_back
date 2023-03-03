@@ -4,6 +4,7 @@ import Post from './Post'
 import Comment from './Comment'
 import Like from './Like'
 import Report from './Report'
+import Notification from './Notification'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -47,7 +48,6 @@ export default class User extends BaseModel {
   public posts: HasMany<typeof Post>
 
   @hasMany(() => Comment, {
-    localKey: 'id',
     foreignKey: 'author'
   })
   public comments: HasMany<typeof Comment>
@@ -56,17 +56,17 @@ export default class User extends BaseModel {
   public likes: HasMany<typeof Like>
 
   // Relationship to get the reports this user.
-  @hasMany(() => Report, {
-    localKey: 'id',
-  })
+  @hasMany(() => Report)
   public reports: HasMany<typeof Report>
 
   // Relationship to get the reports this user did to other Users
   @hasMany(() => Report, {
-    localKey: 'id',
     foreignKey: 'reporter'
   })
   public reported: HasMany<typeof Report>
+
+  @hasMany(() => Notification)
+  public notifications: HasMany<typeof Notification>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

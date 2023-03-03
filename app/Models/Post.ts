@@ -24,7 +24,6 @@ export default class Post extends BaseModel {
 
   // Here is the relationship to the User entity. The foreign key parameter needs to point on the author one to work properly
   @belongsTo(() => User, {
-    localKey: 'id',
     foreignKey: 'author'
   })
   public user: BelongsTo<typeof User>
