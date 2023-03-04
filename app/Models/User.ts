@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, HasMany, hasMany, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import Hash from '@ioc:Adonis/Core/Hash'
+import { BaseModel, beforeSave, column, HasMany, hasMany, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Post from './Post'
 import Comment from './Comment'
 import Like from './Like'
@@ -18,6 +19,14 @@ export default class User extends BaseModel {
 
   @column({ serializeAs: null })
   public password: string
+
+  // We use this hook to hash the password before it's saved in the database
+  @beforeSave()
+  public static async hashPassword(user: User) {
+    if (user.$dirty.password) {
+      user.password = await Hash.make(user.password)
+    }
+  }
 
   @column()
   public avatarUrl: string | null

@@ -13,6 +13,9 @@ export default class extends BaseSchema {
       table.string('avatar_url').notNullable()
       table.string('role').notNullable()
 
+      // TODO : check if it's useful or not
+      // table.string('remember_me_token').nullable()
+
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
