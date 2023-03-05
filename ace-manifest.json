@@ -1,5 +1,17 @@
 {
   "commands": {
+    "purge:old_tokens": {
+      "settings": {
+        "loadApp": true,
+        "stayAlive": false
+      },
+      "commandPath": "./commands/PurgeOldTokens",
+      "commandName": "purge:old_tokens",
+      "description": "",
+      "args": [],
+      "aliases": [],
+      "flags": []
+    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",
