@@ -37,3 +37,7 @@ Route.post('login', async ({ auth, request, response }) => {
     return response.unauthorized('Invalid credentials')
   }
 })
+
+Route.get('/test', async () => {
+  return { hello: 'world' }
+}).middleware('auth')
