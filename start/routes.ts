@@ -40,4 +40,4 @@ Route.post('login', async ({ auth, request, response }) => {
 
 Route.get('/test', async () => {
   return { hello: 'world' }
-}).middleware('auth')
+}).middleware(['auth', 'isAdmin'])
