@@ -6,6 +6,7 @@ import Comment from './Comment'
 import Like from './Like'
 import Report from './Report'
 import Notification from './Notification'
+import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -28,8 +29,9 @@ export default class User extends BaseModel {
     }
   }
 
-  @column()
-  public avatarUrl: string | null
+  // Here is @attachment to put and manage the user's avatar with the library Attachment
+  @attachment()
+  public avatarUrl: AttachmentContract
 
   @column()
   public role: string
