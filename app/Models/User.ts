@@ -31,7 +31,7 @@ export default class User extends BaseModel {
 
   // Here is @attachment to put and manage the user's avatar with the library Attachment
   @attachment()
-  public avatarUrl: AttachmentContract
+  public avatarUrl: AttachmentContract | null
 
   @column()
   public role: string

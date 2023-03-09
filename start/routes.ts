@@ -18,6 +18,8 @@
 |
 */
 
+import './routes/user'
+
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import Route from '@ioc:Adonis/Core/Route'
 import User from 'App/Models/User'
@@ -28,23 +30,7 @@ Route.get('/', async () => {
 
 
 
-
-
-// DEBUG & TESTS
-
-Route.post('login', async ({ auth, request, response }) => {
-  const email = request.input('email')
-  const password = request.input('password')
-
-  try {
-    const token = await auth.use('api').attempt(email, password, {
-      expiresIn: '30 mins'
-    })
-    return token
-  } catch {
-    return response.unauthorized('Invalid credentials')
-  }
-})
+// Debug / Test
 
 Route.get('/authTest', async () => {
   return { hello: 'world' }

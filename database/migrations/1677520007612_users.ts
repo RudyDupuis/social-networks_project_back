@@ -10,8 +10,8 @@ export default class extends BaseSchema {
       table.string('username').unique().notNullable()
       table.string('email').unique().notNullable()
       table.string('password').notNullable()
-      table.json('avatar_url')
-      table.string('role').notNullable()
+      table.json('avatar_url').nullable()
+      table.string('role').notNullable().defaultTo('USER')
 
       // TODO : check if it's useful or not
       // table.string('remember_me_token').nullable()
