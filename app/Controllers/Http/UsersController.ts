@@ -1,8 +1,13 @@
 import { OpaqueTokenContract } from '@ioc:Adonis/Addons/Auth'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
+import UserRepository from 'Database/repositories/UserRepository'
 
 export default class UsersController {
+
+    constructor(private userRepository: UserRepository) {
+        this.userRepository = new UserRepository()
+    }
     
     /**
      * Create a new user
@@ -76,7 +81,13 @@ export default class UsersController {
         ctx.response.status(statusCode).json({message: message})
     }
 
-    public async showProfile(ctx: HttpContextContract) {
+    /**
+     * Route to show an user's profile
+     * 
+     * @param {HttpContextContract} ctx - The HTTP Context for the request.
+     * @returns {Promise<|void>} Return a json with the user if successfull, otherwise, it returns an error message
+     */
+    public async showProfile(ctx: HttpContextContract): Promise<void> {
         
         const routeName: string|undefined = ctx.route?.name
         let userId: number
@@ -86,15 +97,12 @@ export default class UsersController {
         userId = (routeName === 'user.show.profile') ? ctx.params.id : ctx.auth.user?.id
         
         // We fetch the user informations, his posts, the comments related to the posts and their author
-        const user = await User
-            .query()
-            .where('id', userId)
-            .preload('posts', (postsQuery) => {
-                postsQuery.preload('comments', (commentsQuery) => {
-                    commentsQuery.preload('user')
-                })
-            })
-
-        return user;
+        try {
+            const user = await this.userRepository.getUserProfile(userId)
+            return ctx.response.status(200).json({message: "User fetched successfully", data: user})
+        } catch {
+            return ctx.response.status(400).json({message: "The user doesn't exist"})
+        }
+        
     }
 }
