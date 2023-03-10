@@ -54,7 +54,7 @@ export default class UsersController {
             })
             return token
         } catch {
-            return ctx.response.unauthorized('Invalid credentials')
+            return ctx.response.status(401).json({message: 'Invalid credentials'})
         }
     }
 
