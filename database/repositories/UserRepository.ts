@@ -18,10 +18,13 @@ export default class UserRepository {
             .withCount('posts')
             .preload('posts', (postsQuery) => {
                 postsQuery
-                .withCount('comments')
-                .preload('comments', (commentsQuery) => {
-                    commentsQuery.preload('user')
-                })
+                    .withCount('comments')
+                    .withCount('likes')
+                    .preload('comments', (commentsQuery) => {
+                        commentsQuery
+                            .withCount('likes')
+                            .preload('user')
+                    })
             })
             .first()
 
@@ -32,8 +35,13 @@ export default class UserRepository {
         // Convert the user from User to JSON format to add the different counts in it.
         const userJson = user.toJSON()
         userJson.posts_count = user.$extras.posts_count
-        user.posts.forEach((post, index) => {
-            userJson.posts[index].comments_count = post.$extras.comments_count
+        user.posts.forEach((post, indexPost) => {
+            userJson.posts[indexPost].comments_count = post.$extras.comments_count
+            userJson.posts[indexPost].likes_count = post.$extras.likes_count
+
+            post.comments.forEach((comment, indexComment) => {
+                userJson.posts[indexPost].comments[indexComment].likes_count = comment.$extras.likes_count
+            })
         })
 
         return userJson;
