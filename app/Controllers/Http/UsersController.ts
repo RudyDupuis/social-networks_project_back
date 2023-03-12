@@ -19,6 +19,8 @@ export default class UsersController {
         let message: string
         let statusCode: number
 
+
+        // Tries to get an user
         try {
             await User.create({
                 username: ctx.request.input('username'),
