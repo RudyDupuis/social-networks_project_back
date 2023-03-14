@@ -31,8 +31,15 @@ export default class UsersController {
             message = 'The user was successfully created'
             statusCode = 201
         } catch(e) {
+            // Default error message and status code
             message = 'The user could not be created : ' + e
             statusCode = 400
+            
+            // If the "unique" constraint is broke, we change the message and the status code
+            if(e.routine === '_bt_check_unique') {
+                message = 'This user already exists'
+                statusCode = 409
+            }
         }
         
         return ctx.response.status(statusCode).json({message: message})
