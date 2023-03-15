@@ -47,7 +47,7 @@ Route.post('/avatarTest', async ({ request }) => {
   user.avatarUrl = Attachment.fromFile(avatar)
 
   user.save()
-}).middleware(['auth', 'isAdmin'])
+}).middleware(['auth'])
 
 Route.post('/avatarUpdateTest', async ({ request }) => {
   const avatar = request.file('avatar')!

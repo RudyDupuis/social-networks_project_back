@@ -20,11 +20,13 @@ export default class UserRepository {
                 postsQuery
                     .withCount('comments')
                     .withCount('likes')
+                    .preload('user')
                     .preload('comments', (commentsQuery) => {
                         commentsQuery
                             .withCount('likes')
                             .preload('user')
                     })
+                    .preload('likes')
             })
             .first()
 

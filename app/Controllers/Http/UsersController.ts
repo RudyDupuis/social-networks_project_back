@@ -61,7 +61,9 @@ export default class UsersController {
             const token = await ctx.auth.use('api').attempt(email, password, {
                 expiresIn: '30 mins'
             })
-            return token
+
+            const user: User | null = await User.findBy('email', email)
+            return ctx.response.status(200).json({user: user, token: token})
         } catch {
             return ctx.response.status(401).json({message: 'Invalid credentials'})
         }
@@ -90,20 +92,26 @@ export default class UsersController {
         ctx.response.status(statusCode).json({message: message})
     }
 
+    public async getUser(ctx: HttpContextContract): Promise<void> {
+        let userId: number = ctx.params.id
+
+        try {
+            const user = await User.find(userId)
+            return ctx.response.status(200).json({message: "User fetched successfully", data: user})
+        } catch {
+            return ctx.response.status(400).json({message: "The user doesn't exist"})
+        }
+    }
+
     /**
-     * Route to show an user's profile
+     * Route to show an user's full profile
      * 
      * @param {HttpContextContract} ctx - The HTTP Context for the request.
      * @returns {Promise<|void>} Return a json with the user if successfull, otherwise, it returns an error message
      */
-    public async showProfile(ctx: HttpContextContract): Promise<void> {
-        
-        const routeName: string|undefined = ctx.route?.name
-        let userId: number
+    public async showFullProfile(ctx: HttpContextContract): Promise<void> {
 
-        // Verifies if the routes used to come here are the one to show other users profiles
-        // If so, we put the id from the url's params. Otherwise, we put the id of the auth user
-        userId = (routeName === 'user.show.profile') ? ctx.params.id : ctx.auth.user?.id
+        let userId: number = ctx.params.id
         
         // We fetch the user informations, his posts, the comments related to the posts and their author
         try {
@@ -112,6 +120,5 @@ export default class UsersController {
         } catch {
             return ctx.response.status(400).json({message: "The user doesn't exist"})
         }
-        
     }
 }
