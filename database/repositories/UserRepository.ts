@@ -1,4 +1,5 @@
 import { Exception } from '@adonisjs/core/build/standalone'
+import Database from '@ioc:Adonis/Lucid/Database'
 import { ModelObject } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 
@@ -47,5 +48,37 @@ export default class UserRepository {
         })
 
         return userJson;
+    }
+    
+    /**
+     * Set a subscription
+     * 
+     * @param {number} userId The user's id making the subscription
+     * @param {number} subscribesTo The user's id that will be subcribed to
+     * @returns {Promise<any[]>}
+     */
+    public async setSubscription(userId: number, subscribesTo: number): Promise<any[]> {
+        return Database
+            .table('subscribes')
+            .returning('id')
+            .insert({
+                subscriber: userId,
+                subscribed_to: subscribesTo
+            })
+    }
+
+    /**
+     * Delete a subscription
+     * 
+     * @param {number} userId The user's id making the subscription
+     * @param {number} subscribesTo The user's id that will be subcribed to
+     * @returns {Promise<any[]>}
+     */
+    public async deleteSubscription(userId: number, subscribesTo: number): Promise<any[]> {
+        return Database
+            .from('subscribes')
+            .where('subscriber', userId)
+            .andWhere('subscribed_to', subscribesTo)
+            .delete()
     }
 }

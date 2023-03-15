@@ -92,6 +92,12 @@ export default class UsersController {
         ctx.response.status(statusCode).json({message: message})
     }
 
+    /**
+     * Route to get an User's informations
+     * 
+     * @param {HttpContextContract} ctx - The HTTP Context for the request.
+     * @returns {Promise<|void>} Return a json with the user if successfull, otherwise, it returns an error message
+     */
     public async getUser(ctx: HttpContextContract): Promise<void> {
         let userId: number = ctx.params.id
 
@@ -120,5 +126,53 @@ export default class UsersController {
         } catch {
             return ctx.response.status(400).json({message: "The user doesn't exist"})
         }
+    }
+
+    public async subscribe(ctx: HttpContextContract): Promise<void> {
+        let message: string
+        let statusCode: number
+        
+        const userId = ctx.auth.user?.id!
+        const subscribesTo = ctx.params.id
+
+        try {
+            await this.userRepository.setSubscription(userId, subscribesTo)
+
+            message = 'The subscription was successfull'
+            statusCode = 201
+        } catch (e) {
+            // Default error message and status code
+            message = 'The subscription could not be created : ' + e
+            statusCode = 400
+            
+            // If the "unique" constraint is broke, we change the message and the status code
+            if(e.routine === '_bt_check_unique') {
+                message = 'This subscription already exists'
+                statusCode = 409
+            }
+        }
+        
+        return ctx.response.status(statusCode).json({message: message})
+    }
+
+    public async unsubscribe(ctx: HttpContextContract): Promise<void> {
+        let message: string
+        let statusCode: number
+        
+        const userId = ctx.auth.user?.id!
+        const subscribesTo = ctx.params.id
+
+        try {
+            await this.userRepository.deleteSubscription(userId, subscribesTo)
+
+            message = 'The unsubscription was successfull'
+            statusCode = 200
+        } catch (e) {
+            // Default error message and status code
+            message = 'The unsubscription could not be done : ' + e
+            statusCode = 400
+        }
+        
+        return ctx.response.status(statusCode).json({message: message})
     }
 }
