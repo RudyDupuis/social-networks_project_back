@@ -99,10 +99,11 @@ export default class UsersController {
      * @returns {Promise<|void>} Return a json with the user if successfull, otherwise, it returns an error message
      */
     public async getUser(ctx: HttpContextContract): Promise<void> {
-        let userId: number = ctx.params.id
+        const authId: number = ctx.auth.user?.id!
+        const userId: number = ctx.params.id
 
         try {
-            const user = await User.find(userId)
+            const user = await this.userRepository.getUserWithHaveSubscribed(userId, authId)
             return ctx.response.status(200).json({message: "User fetched successfully", data: user})
         } catch {
             return ctx.response.status(400).json({message: "The user doesn't exist"})
@@ -116,8 +117,7 @@ export default class UsersController {
      * @returns {Promise<|void>} Return a json with the user if successfull, otherwise, it returns an error message
      */
     public async showFullProfile(ctx: HttpContextContract): Promise<void> {
-
-        let userId: number = ctx.params.id
+        const userId: number = ctx.params.id
         
         // We fetch the user informations, his posts, the comments related to the posts and their author
         try {
@@ -134,6 +134,10 @@ export default class UsersController {
         
         const userId = ctx.auth.user?.id!
         const subscribesTo = ctx.params.id
+
+        if(userId == subscribesTo) {
+            return ctx.response.status(400).json({message: 'Impossible to subscribe to itself'})
+        }
 
         try {
             await this.userRepository.setSubscription(userId, subscribesTo)
