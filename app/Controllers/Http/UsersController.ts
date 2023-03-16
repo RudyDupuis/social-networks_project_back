@@ -1,3 +1,4 @@
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import { OpaqueTokenContract } from '@ioc:Adonis/Addons/Auth'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
@@ -19,13 +20,17 @@ export default class UsersController {
         let message: string
         let statusCode: number
 
+        // TODO : do the validator
+        const email: string = ctx.request.input('email')
+        const username: string = ctx.request.input('username')
+        const password: string = ctx.request.input('password')
 
         // Tries to get an user
         try {
             await User.create({
-                username: ctx.request.input('username'),
-                email: ctx.request.input('email'),
-                password: ctx.request.input('password')
+                username: username,
+                email: email,
+                password: password
             })
 
             message = 'The user was successfully created'
@@ -33,6 +38,53 @@ export default class UsersController {
         } catch(e) {
             // Default error message and status code
             message = 'The user could not be created : ' + e
+            statusCode = 400
+            
+            // If the "unique" constraint is broke, we change the message and the status code
+            if(e.routine === '_bt_check_unique') {
+                message = 'This user already exists'
+                statusCode = 409
+            }
+        }
+        
+        return ctx.response.status(statusCode).json({message: message})
+    }
+
+    /**
+     * Update an user
+     * 
+     * @param {HttpContextContract} ctx - The HTTP Context for the request. 
+     * @returns {Promise<void>} Return the request's status
+     */
+    public async update(ctx: HttpContextContract): Promise<void> {
+        let message: string
+        let statusCode: number
+        
+        // TODO : do the validator
+        const email: string = ctx.request.input('email')
+        const username: string = ctx.request.input('username')
+        const password: string = ctx.request.input('password')
+        const avatar = ctx.request.file('avatar')
+
+        const user = ctx.auth.user!
+
+        user.email = email
+        user.username = username
+        user.password = password
+        user.avatarUrl = null
+
+        if(avatar) {
+            user.avatarUrl = Attachment.fromFile(avatar)
+        }
+
+        try {
+            await user.save()
+
+            message = 'The user was successfully modified'
+            statusCode = 201
+        } catch(e) {
+            // Default error message and status code
+            message = 'The user could not be modified : ' + e
             statusCode = 400
             
             // If the "unique" constraint is broke, we change the message and the status code

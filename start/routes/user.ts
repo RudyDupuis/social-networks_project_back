@@ -1,6 +1,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.post('user/create', 'UsersController.create').as('user.create')
+Route.post('user/update', 'UsersController.update').as('user.update').middleware('auth')
 Route.post('user/login', 'UsersController.login').as('user.login')
 Route.post('user/logout', 'UsersController.logout').as('user.logout').middleware('auth')
 
