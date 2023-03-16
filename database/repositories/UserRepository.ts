@@ -51,17 +51,24 @@ export default class UserRepository {
             .query()
             .where('id', id)
             .withCount('posts')
-            .preload('posts', (postsQuery) => {
-                postsQuery
+            .preload('posts', (query) => {
+                query
                     .withCount('comments')
                     .withCount('likes')
                     .preload('user')
-                    .preload('comments', (commentsQuery) => {
-                        commentsQuery
+                    .preload('comments', (query) => {
+                        query
                             .withCount('likes')
                             .preload('user')
+                            .preload('likes', (query) => {
+                                query
+                                    .preload('user')
+                            })
                     })
-                    .preload('likes')
+                    .preload('likes', (query) => {
+                        query
+                            .preload('user')
+                    })
             })
             .first()
 
