@@ -11,7 +11,7 @@ export default Factory.define(User, async ({ faker }) => {
     username: faker.internet.userName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    avatarUrl: avatar,
+    avatar: avatar,
     role: faker.helpers.arrayElement(['USER']),
   }
 

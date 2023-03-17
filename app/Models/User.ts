@@ -31,10 +31,13 @@ export default class User extends BaseModel {
 
   // Here is @attachment to put and manage the user's avatar with the library Attachment
   @attachment({ preComputeUrl: true })
-  public avatarUrl: AttachmentContract | null
+  public avatar: AttachmentContract | null
 
   @column()
   public role: string
+
+  @column()
+  public isBanned: boolean
   
   @manyToMany(() => User, {
     localKey: 'id',

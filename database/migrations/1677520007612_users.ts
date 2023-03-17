@@ -10,7 +10,8 @@ export default class extends BaseSchema {
       table.string('username').unique().notNullable()
       table.string('email').unique().notNullable()
       table.string('password').notNullable()
-      table.json('avatar_url').nullable()
+      table.json('avatar').nullable()
+      table.boolean('is_banned').defaultTo(false).notNullable()
       table.string('role').notNullable().defaultTo('USER')
 
       // TODO : check if it's useful or not
