@@ -18,7 +18,7 @@ export default class UserRepository {
         // Convert the user from User to JSON format and add a field to check if the current user
         // have subscribed to the user fetched.
         const userJson = user.toJSON()
-        userJson.haveSubscribed = false
+        userJson.have_subscribed = false
 
         // If there is no auth User, we return the JSON directly
         if(!authId) {
@@ -29,7 +29,7 @@ export default class UserRepository {
             const subscription = await this.getSubscription(authId, id)
             // If there is a subscription fetched
             if(subscription.length > 0) {
-                userJson.haveSubscribed = true
+                userJson.have_subscribed = true
                 return userJson
             }
         } catch(e) {
