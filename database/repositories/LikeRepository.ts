@@ -1,19 +1,20 @@
 import Like from "App/Models/Like";
 
 export default class LikeRepository {
-    public async getPostLikes(postId: number) {
-        const likes = await Like
-            .query()
-            .where('post_id', postId)
 
-        return likes
+    public async deletePostLike(userId: number, postId: number) {
+        await Like
+            .query()
+            .where('user_id', userId)
+            .andWhere('post_id', postId)
+            .delete()
     }
 
-    public async getCommentLikes(commentId: number) {
-        const likes = await Like
+    public async deleteCommentLike(userId: number, commentId: number) {
+        await Like
             .query()
-            .where('comment_id', commentId)
-
-        return likes
+            .where('user_id', userId)
+            .andWhere('comment_id', commentId)
+            .delete()
     }
 }
