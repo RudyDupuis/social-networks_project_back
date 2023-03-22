@@ -19,6 +19,7 @@
 */
 
 import './routes/user'
+import './routes/post'
 
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import Route from '@ioc:Adonis/Core/Route'
