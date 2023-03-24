@@ -18,7 +18,8 @@ export default class extends BaseSchema {
       table.timestamp('updated_at', { useTz: true })
 
       // Makes unable an user to likes twice the same post in the database
-      table.unique(['user_id', 'post_id', 'comment_id'])
+      table.unique(['user_id', 'post_id'])
+      table.unique(['user_id', 'comment_id'])
     })
   }
 
