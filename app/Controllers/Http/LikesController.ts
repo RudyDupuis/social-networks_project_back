@@ -7,10 +7,18 @@ export default class LikesController {
         this.likeRepository = new LikeRepository
     }
 
+    /**
+     * Create a new like
+     * 
+     * @param {HttpContextContract} ctx - The HTTP Context for the request. 
+     * @returns {Promise<void>} Return the request's status
+     */
     public async create(ctx: HttpContextContract): Promise<void> {
         let message: string
         let statusCode: number
 
+        // Get the different params
+        // Either postId or commentId will be null. That's not a problem
         const userId: number = ctx.auth.user!.id
         const postId: number|undefined = ctx.params.post_id
         const commentId: number|undefined = ctx.params.comment_id
@@ -39,10 +47,18 @@ export default class LikesController {
         return ctx.response.status(statusCode).json({message: message})
     }
 
+    /**
+     * Delete a like
+     * 
+     * @param {HttpContextContract} ctx - The HTTP Context for the request. 
+     * @returns {Promise<void>} Return the request's status
+     */
     public async delete(ctx: HttpContextContract): Promise<void> {
         let message: string
         let statusCode: number
 
+        // Get the different params
+        // Either postId or commentId will be null. That's not a problem
         const userId: number = ctx.auth.user!.id
         const postId: number|undefined = ctx.params.post_id
         const commentId: number|undefined = ctx.params.comment_id
@@ -60,7 +76,6 @@ export default class LikesController {
             message = 'The like was successfully suppressed'
             statusCode = 200
         } catch (e) {
-            // Default error message and status code
             message = 'The like could not be suppressed : ' + e
             statusCode = 400
         }
