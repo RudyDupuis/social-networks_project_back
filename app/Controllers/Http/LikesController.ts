@@ -57,20 +57,19 @@ export default class LikesController {
         let message: string
         let statusCode: number
 
-        // Get the different params
-        // Either postId or commentId will be null. That's not a problem
+        // Get the route's name used to come in this controller
+        const routeName = ctx.route?.name!
         const userId: number = ctx.auth.user!.id
-        const postId: number|undefined = ctx.params.post_id
-        const commentId: number|undefined = ctx.params.comment_id
 
         try {
-            if(postId) {
-                this.likeRepository.deletePostLike(userId, postId)
+            if(routeName === 'like.post.delete') {
+                const postId: number = ctx.params.post_id
+                await this.likeRepository.deletePostLike(userId, postId)
             }
 
-            if(commentId) {
-                this.likeRepository.deleteCommentLike(userId, commentId)
-
+            if(routeName === 'like.comment.delete') {
+                const commentId: number = ctx.params.comment_id
+                await this.likeRepository.deleteCommentLike(userId, commentId)
             }
 
             message = 'The like was successfully suppressed'
@@ -81,5 +80,41 @@ export default class LikesController {
         }
 
         return ctx.response.status(statusCode).json({message: message})
+    }
+
+    /**
+     * Get the likes of a post or a comment
+     * 
+     * @param {HttpContextContract} ctx - The HTTP Context for the request. 
+     * @returns {Promise<void>} Return the request's status
+     */
+    public async getByPostOrCommentId(ctx: HttpContextContract): Promise<void> {
+        let message: string
+        let statusCode: number
+
+        // Get the route's name used to come in this controller
+        // And initiate the variable that will contains the likes
+        const routeName = ctx.route?.name!
+        let likes: Like[];
+
+        try {
+            if(routeName === 'like.post.get') {
+                const postId: number = ctx.params.post_id
+                likes = await this.likeRepository.getLikesFromPost(postId)
+            }
+
+            if(routeName === 'like.comment.get') {
+                const postId: number = ctx.params.comment_id
+                likes = await this.likeRepository.getLikesFromComment(postId)
+            }
+
+            message = 'The likes were successfully fetched'
+            statusCode = 200
+        } catch (e) {
+            message = 'The likes could not be fetch : ' + e
+            statusCode = 400
+        }
+        
+        return ctx.response.status(statusCode).json({message: message, datas: likes!})
     }
 }

@@ -79,11 +79,11 @@ export default class UsersController {
         if (email) {
             user.email = email
         }
-          
+        
         if (username) {
             user.username = username
         }
-          
+        
         if (password) {
             user.password = password
         }
