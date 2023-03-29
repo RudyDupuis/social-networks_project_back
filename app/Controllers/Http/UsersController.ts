@@ -42,8 +42,16 @@ export default class UsersController {
             
             // If the "unique" constraint is broke, we change the message and the status code
             if(e.routine === '_bt_check_unique') {
-                message = 'This user already exists'
+                switch(e.constraint) {
+                    case 'users_username_unique':
+                        message = 'This username is already taken'
+                        break;
+                    case 'users_email_unique':
+                        message = 'This email is already taken'
+                        break;
+                }
                 statusCode = 409
+                return ctx.response.status(statusCode).json({message: message})
             }
         }
         
@@ -68,13 +76,22 @@ export default class UsersController {
 
         const user = ctx.auth.user!
 
-        user.email = email
-        user.username = username
-        user.password = password
-        user.avatarUrl = null
+        if (email) {
+            user.email = email
+        }
+        
+        if (username) {
+            user.username = username
+        }
+        
+        if (password) {
+            user.password = password
+        }
+
+        user.avatar = null
 
         if(avatar) {
-            user.avatarUrl = Attachment.fromFile(avatar)
+            user.avatar = Attachment.fromFile(avatar)
         }
 
         try {
@@ -89,12 +106,20 @@ export default class UsersController {
             
             // If the "unique" constraint is broke, we change the message and the status code
             if(e.routine === '_bt_check_unique') {
-                message = 'This user already exists'
+                switch(e.constraint) {
+                    case 'users_username_unique':
+                        message = 'This username is already taken'
+                        break;
+                    case 'users_email_unique':
+                        message = 'This email is already taken'
+                        break;
+                }
                 statusCode = 409
+                return ctx.response.status(statusCode).json({message: message})
             }
         }
         
-        return ctx.response.status(statusCode).json({message: message})
+        return ctx.response.status(statusCode).json({message: message, user: user})
     }
     
     /**
