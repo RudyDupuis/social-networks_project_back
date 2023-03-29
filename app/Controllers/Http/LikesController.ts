@@ -111,7 +111,7 @@ export default class LikesController {
             message = 'The likes were successfully fetched'
             statusCode = 200
         } catch (e) {
-            message = 'The likes could not be fetch : ' + e
+            message = 'The likes could not be fetched : ' + e
             statusCode = 400
         }
         
