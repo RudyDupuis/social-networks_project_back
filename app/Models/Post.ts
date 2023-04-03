@@ -10,13 +10,7 @@ export default class Post extends BaseModel {
   public id: number
 
   @column()
-  public title: string
-
-  @column()
   public message: string
-
-  @column()
-  public tags: string
 
   // Here is the foreign key towards User
   @column()

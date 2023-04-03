@@ -5,22 +5,26 @@ import { file } from '@ioc:Adonis/Core/Helpers'
 export default class UserAvatarCreation {
     public async create() {
 
-        // créating the fake image's properties
-        const avatar = new Attachment({
-            extname: 'png',
-            mimeType: 'image/png',
-            size: 10 * 1000,
-            name: `test.png`,
-        })
+        // // créating the fake image's properties
+        // const avatar = new Attachment({
+        //     extname: 'png',
+        //     mimeType: 'image/png',
+        //     size: 10 * 1000,
+        //     name: `test.png`,
+        // })
     
-        // Mark image as persisted, this will disable the
-        // functions of attachment lite that looks for multipart
-        // body and attempts to write the file from the stream
-        avatar.isPersisted = true
+        // // Mark image as persisted, this will disable the
+        // // functions of attachment lite that looks for multipart
+        // // body and attempts to write the file from the stream
+        // avatar.isPersisted = true
     
-        // Persist the file using Drive
-        await Drive.put(avatar.name, (await file.generatePng('1mb')).contents)
+        // // Persist the file using Drive
+        // await Drive.put(avatar.name, (await file.generatePng('1mb')).contents)
 
-        return avatar
+        //! Have this error and I don't know how to fix it
+        //! E_CANNOT_FIND_ROUTE: Cannot find route for "drive.local.serve" identifier
+        //! So I just return null here
+
+        return null
     }
 }

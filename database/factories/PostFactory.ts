@@ -8,9 +8,7 @@ export default Factory.define(Post, async ({ faker }) => {
   const userId = user?.$getAttribute('id');
 
   return {
-    title: faker.lorem.words(),
     message: faker.lorem.sentences(10),
-    tags: faker.datatype.json(),
     author: userId,
   }
 }).build()

@@ -14,7 +14,7 @@ export default class extends BaseSeeder {
       username: 'TestAdmin',
       email: 'test_admin@test.com',
       password: 'test',
-      avatarUrl: avatar,
+      avatar: avatar,
       role: 'ADMIN'
     })
 
@@ -23,7 +23,7 @@ export default class extends BaseSeeder {
       username: 'TestUser',
       email: 'test_user@test.com',
       password: 'test',
-      avatarUrl: avatar,
+      avatar: avatar,
       role: 'USER'
     })
 
