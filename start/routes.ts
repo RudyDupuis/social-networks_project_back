@@ -22,6 +22,7 @@ import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import Route from '@ioc:Adonis/Core/Route'
 import User from 'App/Models/User'
 
+
 Route.get('/', async () => {
   return { hello: 'world' }
 })
@@ -76,3 +77,4 @@ Route.post('/avatarUpdateTest', async ({ request }) => {
 
   return { status: 'success' }
 }).middleware(['auth', 'isAdmin'])
+
