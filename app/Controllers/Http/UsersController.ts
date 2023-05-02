@@ -3,6 +3,7 @@ import { OpaqueTokenContract } from '@ioc:Adonis/Addons/Auth'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 import UserRepository from 'Database/repositories/UserRepository'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 
 export default class UsersController {
 
@@ -21,20 +22,46 @@ export default class UsersController {
         let statusCode: number
 
         // TODO : do the validator
-        const email: string = ctx.request.input('email')
-        const username: string = ctx.request.input('username')
-        const password: string = ctx.request.input('password')
+        // const email: string = ctx.request.input('email')
+        // const username: string = ctx.request.input('username')
+        // const password: string = ctx.request.input('password')
+        /**
+         * Step 1 - Define schema
+         */
+        const newUserSchema = schema.create({
+            email: schema.string([
+                rules.email()
+            ]),
+            username: schema.string(),
+            password: schema.string([
+                rules.confirmed(),
+                rules.minLength(6),
+                rules.maxLength(255)
+            ]),
+        })
 
         // Tries to get an user
         try {
-            await User.create({
-                username: username,
-                email: email,
-                password: password
+            const payload = await ctx.request.validate({
+                schema: newUserSchema
             })
+
+            const user = new User()
+            user.email = payload.email
+            user.username = payload.username
+            user.password = payload.password
+
+            await user.save();
+
+            // await User.create({
+            //     username: username,
+            //     email: email,
+            //     password: password
+            // })
 
             message = 'The user was successfully created'
             statusCode = 201
+            
         } catch(e) {
             // Default error message and status code
             message = 'The user could not be created : ' + e
@@ -69,36 +96,59 @@ export default class UsersController {
         let statusCode: number
         
         // TODO : do the validator
-        const email: string = ctx.request.input('email')
-        const username: string = ctx.request.input('username')
-        const password: string = ctx.request.input('password')
-        const avatar = ctx.request.file('avatar')
+        // const email: string = ctx.request.input('email')
+        // const username: string = ctx.request.input('username')
+        // const password: string = ctx.request.input('password')
+        // const avatar = ctx.request.file('avatar')
+
+        /**
+         * Step 1 - Define schema
+         */
+        const newUserSchema = schema.create({
+            email: schema.string([
+                rules.email()
+            ]),
+            username: schema.string(),
+            password: schema.string([
+                rules.confirmed(),
+                rules.minLength(6),
+                rules.maxLength(255)
+            ]),
+            avatar: schema.file()
+        })
 
         const user = ctx.auth.user!
 
-        if (email) {
-            user.email = email
-        }
-        
-        if (username) {
-            user.username = username
-        }
-        
-        if (password) {
-            user.password = password
-        }
-
-        user.avatar = null
-
-        if(avatar) {
-            user.avatar = Attachment.fromFile(avatar)
-        }
-
         try {
+
+            const payload = await ctx.request.validate({
+                schema: newUserSchema
+            })
+    
+    
+            if (payload.email) {
+                user.email = payload.email
+            }
+            
+            if (payload.username) {
+                user.username = payload.username
+            }
+            
+            if (payload.password) {
+                user.password = payload.password
+            }
+    
+            user.avatar = null
+    
+            if(payload.avatar) {
+                user.avatar = Attachment.fromFile(payload.avatar)
+            }
+
             await user.save()
 
             message = 'The user was successfully modified'
             statusCode = 201
+
         } catch(e) {
             // Default error message and status code
             message = 'The user could not be modified : ' + e
